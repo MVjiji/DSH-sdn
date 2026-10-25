@@ -1,11 +1,16 @@
 {
-  "version": 1,
+  "version": 2,
   "generatedAt": "2026-10-25",
-  "note": "桑多涅（Sandrone）克隆语音的两个权重。分卷是为了满足代码托管平台的单文件限制；合并后 SHA-256 必须与下面一致。",
+  "note": "桑多涅的克隆语音权重与推理运行时。权重与运行时都挂在 GitHub Release 上（仓库单文件限制装不下），install.ps1 会自动下载；若 models/ 目录里有分卷则优先用分卷。",
+  "release": {
+    "tag": "v0.1.0",
+    "base": "https://github.com/MVjiji/DSH-sdn/releases/download/v0.1.0"
+  },
   "weights": [
     {
       "id": "gpt",
       "label": "GPT 权重（Text2Semantic）",
+      "asset": "sandrone-gpt.ckpt",
       "source": "GPT_weights_v2ProPlus/桑多涅1-e12.ckpt",
       "target": "dsh-sandrone/assets/weights/sandrone-gpt.ckpt",
       "size": 155312438,
@@ -20,6 +25,7 @@
     {
       "id": "sovits",
       "label": "SoVITS 权重（声学模型）",
+      "asset": "sandrone-sovits.pth",
       "source": "SoVITS_weights_v2ProPlus/桑多涅v1.0.1_e6_s198.pth",
       "target": "dsh-sandrone/assets/weights/sandrone-sovits.pth",
       "size": 172764597,
@@ -31,5 +37,39 @@
         "sandrone-sovits-e6s198.pth.part04"
       ]
     }
-  ]
+  ],
+  "runtime": {
+    "label": "GPT-SoVITS 推理运行时（精简版，只含 TTS，无训练/ASR/UV 分离）",
+    "archive": "sandrone-runtime.tar",
+    "extractTo": "~/.dsh/sandrone/runtime",
+    "totalSize": 8909587968,
+    "sha256": "",
+    "parts": [
+      {
+        "name": "sandrone-runtime.tar.part001",
+        "size": 1811939328,
+        "sha256": "AC7207018B73FBB2E531F4ADDA81665E993C3E9172F30F568FD685E624B78FFA"
+      },
+      {
+        "name": "sandrone-runtime.tar.part002",
+        "size": 1811939328,
+        "sha256": "D83BBEC38B1A9037D1603B4388DB2D5709CB67013775D1D83CCF4C0B581E09AA"
+      },
+      {
+        "name": "sandrone-runtime.tar.part003",
+        "size": 1811939328,
+        "sha256": "DA861C685F4BF2160CC4F146FE5BD6E31C435BF993F4F7331E879732E67B067B"
+      },
+      {
+        "name": "sandrone-runtime.tar.part004",
+        "size": 1811939328,
+        "sha256": "D3FA4E5DFFD151D2E19B773C16276BEA74A579098C5297CC79B2329024528603"
+      },
+      {
+        "name": "sandrone-runtime.tar.part005",
+        "size": 1661830656,
+        "sha256": "C225DB22A1993DF5F33094072A9E0AB0EE6ED8BEFF42DBF298D233B405FED90F"
+      }
+    ]
+  }
 }
