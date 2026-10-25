@@ -30,7 +30,8 @@ param(
     [string]$Profile = "",
     [switch]$SkipWeights,
     [switch]$SkipRuntime,
-    [string]$ReleaseBase = ""
+    [string]$ReleaseBase = "",
+    [string]$Proxy = ""
 )
 
 $ErrorActionPreference = "Stop"
@@ -57,7 +58,11 @@ function Invoke-Download([string]$url, [string]$dest, [string]$sha256) {
     Write-Host "    下载 $url"
     $previous = $ErrorActionPreference
     $ErrorActionPreference = "Continue"
-    & curl.exe -L --fail --retry 5 --retry-delay 5 -s -S -C - -o $dest $url 2>&1 | Out-Null
+    $curlArgs = @("-L", "--fail", "--retry", "5", "--retry-delay", "5", "-s", "-S", "-C", "-", "-o", $dest, $url)
+    $proxyValue = $Proxy
+    if ([string]::IsNullOrWhiteSpace($proxyValue)) { $proxyValue = $env:DSH_SANDRONE_PROXY }
+    if (-not [string]::IsNullOrWhiteSpace($proxyValue)) { $curlArgs = @("--proxy", $proxyValue) + $curlArgs }
+    & curl.exe @curlArgs 2>&1 | Out-Null
     $code = $LASTEXITCODE
     $ErrorActionPreference = $previous
     if ($code -ne 0) { throw "下载失败（curl exit=$code）：$url" }
