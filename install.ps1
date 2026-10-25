@@ -171,9 +171,15 @@ if (-not $SkipWeights) {
         $haveParts = $true
         foreach ($part in $parts) { if (-not (Test-Path $part)) { $haveParts = $false } }
 
+        $manual = Join-Path $ModelsDir $weight.asset
         if ($haveParts) {
             Join-Parts $parts $target $weight.sha256
             Write-Ok "$($weight.label)：分卷已合并"
+        }
+        elseif (Test-Path $manual) {
+            Copy-Item $manual $target -Force
+            if ((Get-Sha256 $target) -ne $weight.sha256) { throw "校验失败：$manual" }
+            Write-Ok "$($weight.label)：使用手动放进 models/ 的文件"
         }
         else {
             Invoke-Download "$ReleaseBase/$($weight.asset)" $target $weight.sha256

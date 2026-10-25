@@ -1,4 +1,4 @@
-# 桑多涅 · DSH 插件 + 克隆语音（自包含一键装）
+﻿# 桑多涅 · DSH 插件 + 克隆语音（自包含一键装）
 
 把「桑多涅」（《原神》愚人众执行官第七席「木偶」）装进 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness)：
 **一套人格预设 + 她自己训练出来的声音**。每条回复结束，她会用桑多涅的声线把这段话念出来。
@@ -128,6 +128,36 @@ DSH-sdn/
 
 ---
 
+## 下载慢或超时怎么办
+
+Release 附件走 `github.com`，国内网络经常很慢甚至超时。三个办法，任选其一。
+
+**1. 走代理**
+
+```powershell
+.\install.ps1 -Proxy "http://127.0.0.1:7890"
+```
+
+也可以先设环境变量 `DSH_SANDRONE_PROXY`，脚本会自动用。
+
+**2. 换镜像前缀**
+
+```powershell
+.\install.ps1 -ReleaseBase "https://ghproxy.net/https://github.com/MVjiji/DSH-sdn/releases/download/v0.1.0"
+```
+
+任何能代理 GitHub Release 的镜像都行，把镜像前缀拼在原地址前面即可。
+
+**3. 手动下载（最稳）**
+
+打开 [Releases · v0.1.0](https://github.com/MVjiji/DSH-sdn/releases/tag/v0.1.0)，把 7 个附件下下来：
+
+| 附件 | 放哪里 |
+| --- | --- |
+| `sandrone-gpt.ckpt`<br>`sandrone-sovits.pth` | 仓库的 `models\` 目录 |
+| `sandrone-runtime.tar.part001…005` | `%USERPROFILE%\.dsh\sandrone\runtime\` 目录 |
+
+然后重跑 `.\install.ps1`：脚本认得这些文件，校验 SHA-256 后直接安装，不再联网。
 ## 常见问题
 
 **下载很慢 / 中断**
