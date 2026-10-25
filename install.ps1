@@ -55,8 +55,12 @@ function Invoke-Download([string]$url, [string]$dest, [string]$sha256) {
     $curl = Get-Command curl.exe -ErrorAction SilentlyContinue
     if ($null -eq $curl) { throw "找不到 curl.exe（Windows 10 1803+ 自带）" }
     Write-Host "    下载 $url"
-    & curl.exe -L --fail --retry 5 --retry-delay 5 -C - -o $dest $url
-    if ($LASTEXITCODE -ne 0) { throw "下载失败（curl exit=$LASTEXITCODE）：$url" }
+    $previous = $ErrorActionPreference
+    $ErrorActionPreference = "Continue"
+    & curl.exe -L --fail --retry 5 --retry-delay 5 -s -S -C - -o $dest $url 2>&1 | Out-Null
+    $code = $LASTEXITCODE
+    $ErrorActionPreference = $previous
+    if ($code -ne 0) { throw "下载失败（curl exit=$code）：$url" }
     if ($sha256 -ne "" -and (Get-Sha256 $dest) -ne $sha256) { throw "校验失败：$dest" }
 }
 
