@@ -53,20 +53,41 @@ function Invoke-Download([string]$url, [string]$dest, [string]$sha256) {
         }
         Remove-Item $dest -Force
     }
-    $curl = Get-Command curl.exe -ErrorAction SilentlyContinue
-    if ($null -eq $curl) { throw "找不到 curl.exe（Windows 10 1803+ 自带）" }
-    Write-Host "    下载 $url"
-    $previous = $ErrorActionPreference
-    $ErrorActionPreference = "Continue"
-    $curlArgs = @("-L", "--fail", "--retry", "5", "--retry-delay", "5", "-s", "-S", "-C", "-", "-o", $dest, $url)
     $proxyValue = $Proxy
     if ([string]::IsNullOrWhiteSpace($proxyValue)) { $proxyValue = $env:DSH_SANDRONE_PROXY }
-    if (-not [string]::IsNullOrWhiteSpace($proxyValue)) { $curlArgs = @("--proxy", $proxyValue) + $curlArgs }
-    & curl.exe @curlArgs 2>&1 | Out-Null
-    $code = $LASTEXITCODE
-    $ErrorActionPreference = $previous
-    if ($code -ne 0) { throw "下载失败（curl exit=$code）：$url" }
+    $curl = Get-Command curl.exe -ErrorAction SilentlyContinue
+    $code = 1
+    if ($null -ne $curl) {
+        Write-Host "    下载 $url"
+        $curlArgs = @("-L", "--fail", "--retry", "5", "--retry-delay", "5", "-s", "-S", "-C", "-", "-o", $dest, $url)
+        if (-not [string]::IsNullOrWhiteSpace($proxyValue)) { $curlArgs = @("--proxy", $proxyValue) + $curlArgs }
+        $previous = $ErrorActionPreference
+        $ErrorActionPreference = "Continue"
+        & curl.exe @curlArgs 2>&1 | Out-Null
+        $code = $LASTEXITCODE
+        $ErrorActionPreference = $previous
+    }
+    if ($code -ne 0) {
+        Write-Warn "curl 退出码 $code，改用 .NET 下载"
+        Invoke-DotNetDownload $url $dest $proxyValue
+    }
     if ($sha256 -ne "" -and (Get-Sha256 $dest) -ne $sha256) { throw "校验失败：$dest" }
+}
+
+function Invoke-DotNetDownload([string]$url, [string]$dest, [string]$proxyValue) {
+    $req = [System.Net.HttpWebRequest]::Create($url)
+    $req.UserAgent = "dsh-sandrone"
+    $req.Timeout = 120000
+    if (-not [string]::IsNullOrWhiteSpace($proxyValue)) {
+        $req.Proxy = New-Object System.Net.WebProxy($proxyValue, $true)
+    }
+    $resp = $req.GetResponse()
+    try {
+        $input = $resp.GetResponseStream()
+        $output = [System.IO.File]::Create($dest)
+        try { $input.CopyTo($output) } finally { $output.Close(); $input.Close() }
+    }
+    finally { $resp.Close() }
 }
 
 function Join-Parts([string[]]$parts, [string]$dest, [string]$sha256) {
