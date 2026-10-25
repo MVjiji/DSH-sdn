@@ -1,0 +1,15 @@
+# 运行时目录 / 构建产物
+
+# 安装脚本会从 models/ 的分卷还原出这两个权重（约 320 MB），不重复入库
+dsh-sandrone/assets/weights/
+
+# 临时文件
+*.partial
+*.bak
+*.bak-sandrone
+*.bak-unsandrone
+
+# 系统垃圾
+.DS_Store
+Thumbs.db
+desktop.ini

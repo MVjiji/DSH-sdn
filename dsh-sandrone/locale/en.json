@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Sandrone",
+    "description": "Installs Sandrone as a DeepSeek Harness agent: her persona preset plus local GPT-SoVITS cloned speech — every reply picks a reference matching its tone and is read aloud in her voice, with a switch in Settings."
+  }
+}

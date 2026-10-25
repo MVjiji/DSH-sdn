@@ -1,0 +1,34 @@
+# dsh-sandrone：把「桑多涅」这个 agent 装进 DSH —— 人格预设 + 本机 GPT-SoVITS 克隆语音。
+#
+# 这份 patch 只插**一条**宿主行（`id: sandrone`）：
+#   · 它是设置的命名空间（客户端 `ctx.configForms.get("sandrone")` 按条目 id 取）；
+#   · 它挂 `/sandrone/*` 语音网关；
+#   · 它让 client 半侧进入浏览器启动图（界面才存在）。
+#
+# 人格在第二份 patch（`preset/sandrone.patch.yml`）里，是一个独立的 agent preset。
+#
+# 改设置请到 DSH 的设置页 →「桑多涅」；手改下面的 config 只在重置默认值时有用。
+- insert:
+    - id: sandrone
+      name: dsh-sandrone
+      config:
+        # ── 说话 ────────────────────────────────────────────────────
+        enabled: true
+        autoSpeak: true
+        presetOnly: true
+        volume: 100
+        speed: 1
+        textLang: zh
+        chunkChars: 110
+        # ── 语气 ────────────────────────────────────────────────────
+        toneAuto: true
+        fixedTone: neutral
+        # ── GPT-SoVITS 合成链路 ─────────────────────────────────────
+        apiUrl: http://127.0.0.1:9880
+        gptDir: 'D:\GPT-SoVITS-v2pro-20250604'
+        pythonPath: ''
+        autoStart: true
+        preload: true
+        refAudio: ''
+        promptText: 死亡不过是一个平静的等号，而他现在去了公式的右边。
+        promptLang: zh

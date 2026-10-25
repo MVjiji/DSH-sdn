@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "generatedAt": "2026-10-25",
+  "note": "桑多涅（Sandrone）克隆语音的两个权重。分卷是为了满足代码托管平台的单文件限制；合并后 SHA-256 必须与下面一致。",
+  "weights": [
+    {
+      "id": "gpt",
+      "label": "GPT 权重（Text2Semantic）",
+      "source": "GPT_weights_v2ProPlus/桑多涅1-e12.ckpt",
+      "target": "dsh-sandrone/assets/weights/sandrone-gpt.ckpt",
+      "size": 155312438,
+      "sha256": "5D3645CA329B338B7B0ABC30B9B2C2274270A269DC6CAD784F20F0653E28FBF4",
+      "parts": [
+        "sandrone-gpt-e12.ckpt.part01",
+        "sandrone-gpt-e12.ckpt.part02",
+        "sandrone-gpt-e12.ckpt.part03",
+        "sandrone-gpt-e12.ckpt.part04"
+      ]
+    },
+    {
+      "id": "sovits",
+      "label": "SoVITS 权重（声学模型）",
+      "source": "SoVITS_weights_v2ProPlus/桑多涅v1.0.1_e6_s198.pth",
+      "target": "dsh-sandrone/assets/weights/sandrone-sovits.pth",
+      "size": 172764597,
+      "sha256": "4DD4F87258A251ADFC617CE87C905A7F40BDA553DB9A5720E99EFEF1F77E23FE",
+      "parts": [
+        "sandrone-sovits-e6s198.pth.part01",
+        "sandrone-sovits-e6s198.pth.part02",
+        "sandrone-sovits-e6s198.pth.part03",
+        "sandrone-sovits-e6s198.pth.part04"
+      ]
+    }
+  ]
+}
